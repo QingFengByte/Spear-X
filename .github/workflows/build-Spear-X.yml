@@ -35,6 +35,8 @@ jobs:
           npm install               # 安装前端依赖
           cd ..                     # 返回上一级目录
           wails build               # 执行构建
+      - name: List files in build/bin
+        run: echo "Workspace is at $(pwd)"
         # 6. 上传构建后的 exe 文件作为 Artifacts
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
