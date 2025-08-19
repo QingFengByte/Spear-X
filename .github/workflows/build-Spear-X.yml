@@ -40,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SpearX-executable          # 上传的 artifact 名称
-          path: ./Spear/Spear\ X/build/bin/SpearX.exe  # 替换为生成 exe 文件的实际路径
+          path: 'Spear X/build/bin/SpearX.exe'  # 替换为生成 exe 文件的实际路径
