@@ -4,53 +4,74 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest]  # 只构建 Windows 和 macOS
-    runs-on: ${{ matrix.os }}
-
+  macos-build:
+    runs-on: macos-latest
     steps:
-      # 1. 安装 Go
+      - uses: actions/checkout@v3
+
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.24'
 
-      # 2. 安装 Wails CLI
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      # 3. 安装 Node.js
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 4. 克隆仓库
-      - name: Clone Spear
-        run: git clone https://github.com/sspsec/Spear.git
-
-      # 5. 安装前端依赖
       - name: Install frontend deps
         run: |
           cd "Spear/Spear X/frontend"
           npm ci
 
-      # 6. 构建对应平台
-      - name: Build App
+      - name: Build macOS
         run: |
           cd "Spear/Spear X"
-          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
-            wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
-          else
-            wails build -platform windows/amd64 -o build/bin/SpearX-windows.exe
-          fi
+          wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
+          wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
 
-      # 7. 上传构建产物
-      - name: Upload artifact
+      - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: SpearX-${{ matrix.os }}
+          name: SpearX-macos
+          path: "Spear/Spear X/build/bin/*"
+
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.24'
+
+      - name: Install Wails CLI
+        shell: pwsh
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend deps
+        shell: pwsh
+        run: |
+          cd "Spear/Spear X/frontend"
+          npm ci
+
+      - name: Build Windows
+        shell: pwsh
+        run: |
+          cd "Spear/Spear X"
+          wails build -platform windows/amd64 -o build/bin/SpearX-windows.exe
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpearX-windows
           path: "Spear/Spear X/build/bin/*"
