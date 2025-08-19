@@ -44,7 +44,7 @@ jobs:
           wails build -platform darwin/arm64
           wails build -platform darwin/amd64
           wails build -platform windows/amd64
-          wails build -platform linux/amd64
+          
 
       # 7. 重命名产物（可选）
       - name: Rename outputs
@@ -54,7 +54,7 @@ jobs:
           mv darwin/arm64/SpearX SpearX-macos-arm64
           mv darwin/amd64/SpearX SpearX-macos-amd64
           mv windows/amd64/SpearX.exe SpearX-windows.exe
-          mv linux/amd64/SpearX SpearX-linux
+          
 
       # 8. 打包并上传所有产物
       - name: Upload artifacts
