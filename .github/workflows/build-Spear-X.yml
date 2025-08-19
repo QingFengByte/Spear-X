@@ -5,41 +5,62 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-     
       # 1. 安装 Go 环境
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.24'  # 设置 Go 版本，确保与你的项目兼容
+          go-version: '1.24'
 
       # 2. 安装 Wails CLI
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-      # 3. 安装node 环境
+
+      # 3. 安装 Node.js
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # 设置 Node.js 版本，确保与你的项目兼容
-       # 3. 克隆远程仓库
+          node-version: '18'
+
+      # 4. 克隆远程仓库
       - name: Clone remote Spear
         run: git clone https://github.com/sspsec/Spear.git
-      # 4. 进入 "Spear" 仓库目录，进入 "Spear X" 并构建
+
+      # 5. 构建 SpearX
       - name: Build SpearX
         run: |
-          cd Spear                  # 进入仓库根目录
-          cd 'Spear X'              # 进入 "Spear X" 目录
-          cd frontend               # 进入前端目录
-          npm install               # 安装前端依赖
-          cd ..                     # 返回上一级目录
-          wails build               # 执行构建
-      - name: List files in build/bin
-        run: echo "Workspace is at $(pwd)"
-        # 6. 上传构建后的 exe 文件作为 Artifacts
-      - name: Upload exe artifact
+          cd Spear
+          cd 'Spear X'
+          cd frontend
+          npm install
+          cd ..
+          wails build
+
+      # 6. 重命名产物
+      - name: Rename artifact
+        run: |
+          cd "Spear/Spear X/build/bin"
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            mv SpearX.exe SpearX-windows.exe
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            mv SpearX SpearX-macos
+          else
+            mv SpearX SpearX-linux
+          fi
+
+      # 7. 列出构建产物目录（调试用）
+      - name: List build/bin
+        run: ls -R "Spear/Spear X/build/bin"
+
+      # 8. 上传构建产物
+      - name: Upload SpearX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SpearX-executable          # 上传的 artifact 名称
-          path: 'D:\a\Spear-X\Spear-X\Spear\Spear X\build\bin\SpearX.exe'  # 替换为生成 exe 文件的实际路径
+          name: SpearX-${{ matrix.os }}
+          path: |
+            Spear/Spear X/build/bin/*
