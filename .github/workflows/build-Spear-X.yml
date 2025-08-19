@@ -35,3 +35,9 @@ jobs:
           npm install               # 安装前端依赖
           cd ..                     # 返回上一级目录
           wails build               # 执行构建
+        # 6. 上传构建后的 exe 文件作为 Artifacts
+      - name: Upload exe artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SpearX-executable          # 上传的 artifact 名称
+          path: ./Spear/Spear\ X/build/bin/SpearX.exe  # 替换为生成 exe 文件的实际路径
