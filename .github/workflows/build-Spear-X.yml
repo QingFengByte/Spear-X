@@ -36,17 +36,10 @@ jobs:
           cd frontend
           npm install
 
-      # 6. 多平台构建
-      - name: Build for all platforms
-        run: |
-          cd Spear
-          cd 'Spear X'
-          wails build -platform darwin/arm64
-          wails build -platform darwin/amd64
-          wails build -platform windows/amd64
+
           
 
-      # 7. 输出产物（可选）
+      # 6. 多平台构建
       - name: Build for all platforms
         run: |
           cd Spear
