@@ -1,0 +1,37 @@
+name: Build and Run SpearX
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+     
+      # 1. 安装 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.24'  # 设置 Go 版本，确保与你的项目兼容
+
+      # 2. 安装 Wails CLI
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      # 3. 安装node 环境
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # 设置 Node.js 版本，确保与你的项目兼容
+       # 3. 克隆远程仓库
+      - name: Clone remote Spear
+        run: git clone https://github.com/sspsec/Spear.git
+      # 4. 进入 "Spear" 仓库目录，进入 "Spear X" 并构建
+      - name: Build SpearX
+        run: |
+          cd Spear                  # 进入仓库根目录
+          cd 'Spear X'              # 进入 "Spear X" 目录
+          cd frontend               # 进入前端目录
+          npm install               # 安装前端依赖
+          cd ..                     # 返回上一级目录
+          wails build               # 执行构建
