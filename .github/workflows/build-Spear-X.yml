@@ -54,7 +54,7 @@ jobs:
           wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
           wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
           wails build -platform windows/amd64 -o build/bin/SpearX-windows.exe
-          wails build -platform linux/amd64   -o build/bin/SpearX-linux
+        
 
           
 
