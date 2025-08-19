@@ -1,11 +1,14 @@
-name: Build SpearX All Platforms
+name: Build SpearX macOS & Windows
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]  # 只构建 Windows 和 macOS
+    runs-on: ${{ matrix.os }}
 
     steps:
       # 1. 安装 Go
@@ -31,29 +34,23 @@ jobs:
       # 5. 安装前端依赖
       - name: Install frontend deps
         run: |
-          cd Spear
-          cd 'Spear X'
-          cd frontend
-          npm install
+          cd "Spear/Spear X/frontend"
+          npm ci
 
-
-          
-
-      # 6. 多平台构建
-      - name: Build for all platforms
+      # 6. 构建对应平台
+      - name: Build App
         run: |
-          cd Spear
-          cd 'Spear X'
-          wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
-          wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
-          wails build -platform windows/amd64 -o build/bin/SpearX-windows.exe
-        
+          cd "Spear/Spear X"
+          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
+            wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
+          else
+            wails build -platform windows/amd64 -o build/bin/SpearX-windows.exe
+          fi
 
-          
-
-      # 8. 打包并上传所有产物
-      - name: Upload artifacts
+      # 7. 上传构建产物
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SpearX-all-platforms
-          path: Spear/Spear X/build/bin/*
+          name: SpearX-${{ matrix.os }}
+          path: "Spear/Spear X/build/bin/*"
