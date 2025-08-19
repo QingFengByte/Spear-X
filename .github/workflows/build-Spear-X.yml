@@ -1,17 +1,14 @@
-name: Build and Run SpearX
+name: Build SpearX All Platforms
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. 安装 Go 环境
+      # 1. 安装 Go
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -27,40 +24,41 @@ jobs:
         with:
           node-version: '18'
 
-      # 4. 克隆远程仓库
-      - name: Clone remote Spear
+      # 4. 克隆仓库
+      - name: Clone Spear
         run: git clone https://github.com/sspsec/Spear.git
 
-      # 5. 构建 SpearX
-      - name: Build SpearX
+      # 5. 安装前端依赖
+      - name: Install frontend deps
         run: |
           cd Spear
           cd 'Spear X'
           cd frontend
           npm install
-          cd ..
-          wails build
 
-      # 6. 重命名产物
-      - name: Rename artifact
+      # 6. 多平台构建
+      - name: Build for all platforms
+        run: |
+          cd Spear
+          cd 'Spear X'
+          wails build -platform darwin/arm64
+          wails build -platform darwin/amd64
+          wails build -platform windows/amd64
+          wails build -platform linux/amd64
+
+      # 7. 重命名产物（可选）
+      - name: Rename outputs
         run: |
           cd "Spear/Spear X/build/bin"
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            mv SpearX.exe SpearX-windows.exe
-          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            mv SpearX SpearX-macos
-          else
-            mv SpearX SpearX-linux
-          fi
+          # 这些路径要根据 wails 输出的文件夹结构调整
+          mv darwin/arm64/SpearX SpearX-macos-arm64
+          mv darwin/amd64/SpearX SpearX-macos-amd64
+          mv windows/amd64/SpearX.exe SpearX-windows.exe
+          mv linux/amd64/SpearX SpearX-linux
 
-      # 7. 列出构建产物目录（调试用）
-      - name: List build/bin
-        run: ls -R "Spear/Spear X/build/bin"
-
-      # 8. 上传构建产物
-      - name: Upload SpearX artifact
+      # 8. 打包并上传所有产物
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: SpearX-${{ matrix.os }}
-          path: |
-            Spear/Spear X/build/bin/*
+          name: SpearX-all-platforms
+          path: Spear/Spear X/build/bin/*
