@@ -34,7 +34,9 @@ jobs:
           cd "Spear/Spear X"
           wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
       - name: 查看构建目录内容
-        run: ls -al "Spear/Spear X/build/bin/"
+        run: |
+          ls -al "Spear/Spear X/build/bin/"
+          mv "Spear/Spear X/build/bin/SpearX.app" "Spear/Spear X/build/bin/SpearX-macos-arm64.app"
 
        
 
@@ -75,7 +77,9 @@ jobs:
           cd "Spear/Spear X"
           wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
       - name: 查看构建目录内容
-        run: ls -al "Spear/Spear X/build/bin/"
+        run: |
+          ls -al "Spear/Spear X/build/bin/"
+          mv "Spear/Spear X/build/bin/SpearX.app" "Spear/Spear X/build/bin/SpearX-macos-amd64.app"
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
