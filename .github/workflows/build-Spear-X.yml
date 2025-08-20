@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      - name: Clone remote Spear
+        run: git clone https://github.com/sspsec/Spear.git
 
       - name: Install frontend deps
         run: |
