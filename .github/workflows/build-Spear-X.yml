@@ -32,10 +32,10 @@ jobs:
       - name: Build macOS
         run: |
           cd "Spear/Spear X"
-          wails build -platform darwin/arm64 -o build/bin/arm64/SpearX-macos-arm64
+          wails build -platform darwin/arm64
       - name: 查看构建目录内容
         run: |
-          ls -al "Spear/Spear X/build/arm63/bin/"
+          ls -al "Spear/Spear X/build/bin/"
       
 
        
@@ -45,7 +45,7 @@ jobs:
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/arm64/*"
+            "Spear/Spear X/build/bin/*"
             
   macos-build-amd64:
     runs-on: macos-latest
@@ -75,10 +75,10 @@ jobs:
       - name: Build macOS
         run: |
           cd "Spear/Spear X"
-          wails build -platform darwin/amd64 -o build/bin/amd64/SpearX-macos-amd64
+          wails build -platform darwin/amd64
       - name: 查看构建目录内容
         run: |
-          ls -al "Spear/Spear X/build/amd64/bin/"
+          ls -al "Spear/Spear X/build/bin/"
         
 
       - name: Upload macOS artifacts
@@ -86,7 +86,7 @@ jobs:
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/amd64/*"
+            "Spear/Spear X/build/bin/*"
            
 
   windows-build:
