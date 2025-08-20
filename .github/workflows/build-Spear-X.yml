@@ -32,12 +32,11 @@ jobs:
       - name: Build macOS
         run: |
           cd "Spear/Spear X"
-          wails build -platform darwin/arm64  -o build/bin/SpearX-macos-arm64
+          wails build -platform darwin/arm64 -o build/bin/arm64/SpearX-macos-arm64
       - name: 查看构建目录内容
         run: |
-          ls -al "Spear/Spear X/build/bin/"
-          mv "Spear/Spear X/build/bin/SpearX.app" "Spear/Spear X/build/bin/SpearX-macos-arm64.app"
-          ls -al "Spear/Spear X/build/bin/"
+          ls -al "Spear/Spear X/build/arm63/bin/"
+      
 
        
 
@@ -46,7 +45,7 @@ jobs:
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/SpearX-macos-arm64.app"
+            "Spear/Spear X/build/bin/arm64/*"
             
   macos-build-amd64:
     runs-on: macos-latest
@@ -76,19 +75,18 @@ jobs:
       - name: Build macOS
         run: |
           cd "Spear/Spear X"
-          wails build -platform darwin/amd64  -o build/bin/SpearX-macos-amd64
+          wails build -platform darwin/amd64 -o build/bin/amd64/SpearX-macos-amd64
       - name: 查看构建目录内容
         run: |
-          ls -al "Spear/Spear X/build/bin/"
-          mv "Spear/Spear X/build/bin/SpearX.app" "Spear/Spear X/build/bin/SpearX-macos-amd64.app"
-          ls -al "Spear/Spear X/build/bin/"
+          ls -al "Spear/Spear X/build/amd64/bin/"
+        
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/SpearX-macos-amd64.app"
+            "Spear/Spear X/build/bin/amd64/*"
            
 
   windows-build:
