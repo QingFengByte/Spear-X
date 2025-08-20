@@ -39,7 +39,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SpearX-macos
-          path: "Spear/Spear X/build/bin/*"
+          path: |
+            "Spear/Spear X/build/bin/SpearX-macos-arm64"
+            "Spear/Spear X/build/bin/SpearX-macos-amd64"
 
   windows-build:
     runs-on: windows-latest
