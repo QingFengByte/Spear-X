@@ -46,7 +46,7 @@ jobs:
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/*"
+            "Spear/Spear X/build/bin/SpearX-macos-arm64.app"
             
   macos-build-amd64:
     runs-on: macos-latest
@@ -88,7 +88,7 @@ jobs:
         with:
           name: SpearX-macos
           path: |
-            "Spear/Spear X/build/bin/*"
+            "Spear/Spear X/build/bin/SpearX-macos-amd64.app"
            
 
   windows-build:
